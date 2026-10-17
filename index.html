@@ -1,0 +1,249 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gym RPG | Ascension</title>
+<style>
+:root {
+  --bg: #0c0d12;
+  --panel: #151720;
+  --gold: #e7b75a;
+  --muted: #9699aa;
+  --border: #34313a;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: radial-gradient(ellipse at top, #252039 0%, var(--bg) 55%);
+  color: #f4f0e8;
+  font-family: Georgia, serif;
+  min-height: 100vh;
+}
+header {
+  padding: 22px 7%;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+.logo { color: var(--gold); font-size: 23px; font-weight: bold; }
+header span { color: var(--muted); font: 12px Arial, sans-serif; }
+main { max-width: 1100px; margin: auto; padding: 35px 20px; }
+.eyebrow { color: var(--gold); letter-spacing: 3px; font: 11px Arial, sans-serif; }
+h1 { font-size: clamp(30px, 5vw, 48px); margin: 12px 0; }
+.subtitle { color: var(--muted); font: 14px Arial, sans-serif; }
+.panel {
+  background: linear-gradient(145deg, #1c1d29, #12131a);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+}
+.hero {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 18px;
+  margin-top: 28px;
+}
+.rank { color: var(--gold); font-size: 13px; }
+.level { font-size: 36px; margin: 12px 0; }
+.muted { color: var(--muted); font: 13px Arial, sans-serif; }
+.bar {
+  height: 10px; background: #30303d; border-radius: 20px;
+  margin: 14px 0 8px; overflow: hidden;
+}
+.fill {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, #a66b26, #ffe09a);
+  transition: width .4s;
+}
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px; margin-top: 18px;
+}
+.stat { padding: 18px; }
+.stat strong { display: block; font-size: 25px; margin-top: 12px; }
+.stat small { color: var(--muted); font: 11px Arial, sans-serif; }
+h2 { font-size: 20px; margin-top: 0; }
+button {
+  background: #292434; color: var(--gold);
+  border: 1px solid #62503a; padding: 12px 16px;
+  border-radius: 7px; cursor: pointer; font-weight: bold;
+}
+button:hover { background: #3a3044; }
+.primary { background: #bd8a39; color: #17120a; }
+.actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+.section { margin-top: 28px; }
+.quest {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--border);
+  font: 13px Arial, sans-serif;
+}
+.quest:last-child { border-bottom: 0; }
+.reward { color: var(--gold); white-space: nowrap; }
+nav {
+  display: flex; gap: 8px; flex-wrap: wrap; margin-top: 28px;
+}
+nav button { flex: 1; min-width: 100px; }
+#message { color: var(--gold); font: 13px Arial, sans-serif; margin-top: 14px; }
+@media(max-width:650px) {
+  .hero { grid-template-columns: 1fr; }
+  .stats { grid-template-columns: 1fr; }
+  header { padding: 18px; }
+  main { padding: 25px 15px; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">⚔ ASCENSION</div>
+  <span>GYM RPG · PLAYER TERMINAL</span>
+</header>
+<main>
+  <div class="eyebrow">YOUR JOURNEY BEGINS</div>
+  <h1>Welcome, Adventurer.</h1>
+  <p class="subtitle">Every rep is experience. Every workout brings you closer to ascension.</p>
+
+  <div class="hero">
+    <section class="panel">
+      <div class="rank" id="rank">✦ UNRANKED ADVENTURER</div>
+      <div class="level">Level <span id="level">1</span></div>
+      <div class="muted"><span id="xp">0</span> / <span id="next">100</span> XP to next level</div>
+      <div class="bar"><div class="fill" id="bar"></div></div>
+      <div class="muted" id="progress">0% progress</div>
+      <div class="actions">
+        <button class="primary" onclick="earnXP(10)">✦ Claim 10 XP</button>
+        <button onclick="earnXP(25)">Complete Quest +25 XP</button>
+      </div>
+      <div id="message">Your adventure awaits.</div>
+    </section>
+
+    <section class="panel">
+      <div class="eyebrow">CHARACTER CLASS</div>
+      <h2 style="margin-top:18px">⚔ The Iron Initiate</h2>
+      <p class="muted">Your class will evolve as your strength, discipline and experience grow.</p>
+      <div class="quest"><span>Strength</span><span id="strength">10</span></div>
+      <div class="quest"><span>Discipline</span><span id="discipline">10</span></div>
+      <div class="quest"><span>Consistency</span><span id="consistency">10</span></div>
+    </section>
+  </div>
+
+  <div class="stats">
+    <div class="panel stat"><small>TOTAL XP</small><strong id="total">0</strong><small>Lifetime experience</small></div>
+    <div class="panel stat"><small>WORKOUTS</small><strong id="workouts">0</strong><small>Sessions completed</small></div>
+    <div class="panel stat"><small>ACHIEVEMENTS</small><strong id="achievements">0</strong><small>Milestones unlocked</small></div>
+  </div>
+
+  <section class="panel section">
+    <div class="eyebrow">ACTIVE QUESTS</div>
+    <h2 style="margin-top:12px">Today's Challenges</h2>
+    <div class="quest"><span>⚔ Complete your first quest</span><span class="reward">+25 XP</span></div>
+    <div class="quest"><span>🛡 Earn 100 total XP</span><span class="reward">+ Achievement</span></div>
+    <div class="quest"><span>🔥 Complete a workout</span><span class="reward">+ Workout XP</span></div>
+  </section>
+
+  <nav>
+    <button onclick="showSection('dashboard')">Character</button>
+    <button onclick="showSection('workouts')">Workouts</button>
+    <button onclick="showSection('ranks')">Ranks</button>
+    <button onclick="showSection('arena')">Arena</button>
+  </nav>
+  <section id="extra" class="panel section" hidden></section>
+</main>
+
+<script>
+let data = {
+  xp: 0, total: 0, workouts: 0,
+  achievements: 0, claimed100: false
+};
+
+function levelFor(total) {
+  let level = 1, remaining = total, needed = 100;
+  while (remaining >= needed) {
+    remaining -= needed;
+    level++;
+    needed = level * 100;
+  }
+  return { level, xp: remaining, next: needed };
+}
+
+function earnXP(amount) {
+  data.xp += amount;
+  data.total += amount;
+
+  if (data.total >= 100 && !data.claimed100) {
+    data.claimed100 = true;
+    data.achievements++;
+    document.getElementById('message').textContent =
+      '🏆 Achievement unlocked: First Century!';
+  } else {
+    document.getElementById('message').textContent =
+      `You earned ${amount} XP. Keep training, adventurer!`;
+  }
+  save();
+  render();
+}
+
+function render() {
+  let p = levelFor(data.total);
+  document.getElementById('level').textContent = p.level;
+  document.getElementById('xp').textContent = p.xp;
+  document.getElementById('next').textContent = p.next;
+  document.getElementById('bar').style.width =
+    (p.xp / p.next * 100) + '%';
+  document.getElementById('progress').textContent =
+    Math.floor(p.xp / p.next * 100) + '% progress';
+  document.getElementById('total').textContent = data.total;
+  document.getElementById('workouts').textContent = data.workouts;
+  document.getElementById('achievements').textContent = data.achievements;
+  document.getElementById('rank').textContent =
+    p.level >= 10 ? '✦ GOLDEN CHAMPION' :
+    p.level >= 5 ? '✦ ELITE ADVENTURER' :
+    p.level >= 2 ? '✦ RISING WARRIOR' : '✦ UNRANKED ADVENTURER';
+  document.getElementById('strength').textContent = 10 + p.level - 1;
+  document.getElementById('discipline').textContent = 10 + p.level - 1;
+  document.getElementById('consistency').textContent = 10 + data.workouts;
+}
+
+function save() {
+  try { localStorage.setItem('gymRpgData', JSON.stringify(data)); }
+  catch (e) { /* Saving may be unavailable in some browsers. */ }
+}
+
+function load() {
+  try {
+    const saved = localStorage.getItem('gymRpgData');
+    if (saved) data = { ...data, ...JSON.parse(saved) };
+  } catch (e) {}
+  render();
+}
+
+function showSection(section) {
+  const extra = document.getElementById('extra');
+  extra.hidden = false;
+
+  if (section === 'dashboard') {
+    extra.innerHTML = '<h2>Character Dashboard</h2><p class="muted">Your stats and progression are shown above.</p>';
+  } else if (section === 'workouts') {
+    extra.innerHTML = '<h2>Workout Hall</h2><p class="muted">Workout logging is our next development step.</p><button onclick="completeWorkout()">Complete Test Workout (+50 XP)</button>';
+  } else if (section === 'ranks') {
+    extra.innerHTML = '<h2>Rank Hall</h2><p>Level 1: Initiate</p><p>Level 2: Rising Warrior</p><p>Level 5: Elite Adventurer</p><p>Level 10: Golden Champion</p>';
+  } else {
+    extra.innerHTML = '<h2>Strength Arena</h2><p class="muted">Online rankings will come later. Your first goal is to build your character.</p>';
+  }
+  extra.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function completeWorkout() {
+  data.workouts++;
+  earnXP(50);
+  showSection('workouts');
+}
+
+load();
+</script>
+</body>
+</html>
